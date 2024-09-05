@@ -1,32 +1,34 @@
-import CryptoJS from "crypto-js"
-import { useEffect, useState } from "react"
-
+import { useCharacters } from "../hooks/useCharacters"
+import { GridCharacters } from "./GridCharacters"
+import Pagination from '@mui/material/Pagination'
+import { useState } from "react"
 
 export const MarvelApp = () => {
-  const [characters, setCharacter] = useState()
+  const [page, setPage] = useState(1)
+  const { characters, pag } = useCharacters(page)
 
-  const time_stamp = new Date().getTime()
-  const private_api_key = '71f0c52e949d2dcaddd94e528b329cb7033aecb6'
-  const public_api_key= '3605731526765112a1c687356e9702b3'
-
-  const hash = CryptoJS.MD5(time_stamp + private_api_key + public_api_key).toString()
-  
-  useEffect(() => {
-    const reqCharacter = async () => {
-      const resp = await fetch (`https://gateway.marvel.com:443/v1/public/characters?ts=${time_stamp}&apikey=${public_api_key}&hash=${hash}`)
-      const {data} = await resp.json()
-      data.results.map((characters) =>{
-        console.log(characters.name)
-      })
-    }
-    reqCharacter()
-    
-  
-    
-  }, [])
-  
-  
+  const handlePageChange = (event, value) => {
+    setPage(value)
+  }
   return (
-    <div>MarvelApp</div>
+    <>
+      <nav class="navbar navbar-dark bg-dark fixed-top position-relative">
+        <div class="container-fluid">
+          <a class="navbar-brand" >SuperHeroes de Marvel</a>
+
+        </div>
+      </nav>
+
+      <div className='container d-flex flex-row justify-content-center alig-items-center mt-3 w-50'>
+
+        <form className='d-flex' onSubmit={(e) => { handlePoke(categoria, e) }} >
+          <input type='text' className='form-control me-2' onChange={(e) => { setCategoria(e.target.value) }} />
+          <input type='submit' className='btn btn-outline-success' value='Buscar SuperHeroe' />
+        </form>
+
+      </div>
+      <GridCharacters characters={characters} />
+      <Pagination className='position-absolute start-50' count={pag} page={page} onChange={handlePageChange} />
+    </>
   )
 }
