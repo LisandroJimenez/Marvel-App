@@ -5,5 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 
 createRoot(document.getElementById('root')).render(
-  <MarvelApp />
+  <StrictMode>
+    <MarvelApp />
+
+  </StrictMode>
 )
